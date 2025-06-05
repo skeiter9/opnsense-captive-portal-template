@@ -200,8 +200,8 @@ $.setLang = (id) => {
             langText = {};
             $.loadLangs(evt.selectedItem);
 
-            if (typeof $('#inputUsername') !== 'undefined') {
-                $('#inputUsername').prop('readonly', false).focus();
+            if (typeof $('#inputCode') !== 'undefined') {
+                $('#inputCode').prop('readonly', false).focus();
             }
         }
     });

@@ -6,6 +6,8 @@
     },
     "footer_isp_info": {},
     "pagetitle": "User login system | Burbase Invitados",
+    "code": "Access Code",
+    "code_placeholder": "Enter 5-digit code",
     "username": "Username (Login)",
     "inputUsername_placeholder": "-- enter Login, use correct case --",
     "userpass": "Password",

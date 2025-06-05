@@ -106,6 +106,11 @@ const configureInputFocusBehavior = () => {
     $('input:not([readonly])').on('blur', function () {
         $(this).prop('readonly', true);
     });
+    
+    // Auto-focus code input when ready
+    $('#inputCode').on('focus', function () {
+        $(this).prop('readonly', false).focus();
+    });
 };
 
 const setupAuthHandlers = () => {
@@ -116,9 +121,19 @@ const setupAuthHandlers = () => {
 
 const handleSignIn = (event) => {
     event.preventDefault();
+    
+    const code = $('#inputCode').val();
+    if (code.length !== 5) {
+        $.authorisationFailed();
+        return;
+    }
+    
+    const username = code.substring(0, 2);
+    const password = code.substring(2, 5);
+    
     authenticateUser({
-        user: $('#inputUsername').val(),
-        password: $('#inputPassword').val(),
+        user: username,
+        password: password,
     });
 };
 
@@ -163,8 +178,8 @@ const checkConnectionStatus = () => {
         url: '/api/captiveportal/access/status/',
         dataType: 'json',
         data: {
-            user: $('#inputUsername').val(),
-            password: $('#inputPassword').val(),
+            user: '',
+            password: '',
         },
     })
     .done((data) => {
