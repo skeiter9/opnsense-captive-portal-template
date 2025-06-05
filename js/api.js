@@ -182,26 +182,26 @@ class CaptivePortalAPI {
             this.updateUIWithLangText(this.langText);
         } catch (error) {
             console.error("Failed to load language file:", error);
-            this.showModal({
-                title: 'An error occurred',
-                subtitle: 'Translation content is unavailable',
-                content: `<p>Unfortunately, the language file could not be loaded. The login system will automatically switch to ${this.settings.langs[this.settings.default_lang]}.</p>`,
-                iconText: '&#9888;',
-                customStyles: {
-                    headerColor: this.settings.modal?.auth_failed_header_color,
-                    overlayColor: this.settings.modal?.overlay_color,
-                    timeout: this.settings.modal?.timeout,
-                    timeoutProgressbar: true,
-                    pauseOnHover: true
-                },
-                onOpen: async () => {
-                    await this.loadLangs(this.settings.default_lang);
-                },
-                onClose: () => {
-                    this.setLangLayout(this.settings.langs, this.settings.default_lang, '#polyglotLanguageSwitcher');
-                    this.createCookie('lang', this.settings.default_lang, 31);
-                }
-            });
+            // Provide fallback language content for development
+            this.langText = {
+                cp_portal_head_title: 'Welcome to Internet Access',
+                code: 'Access Code',
+                inputCode_placeholder: 'Enter your access code',
+                termcondition1: 'I accept the',
+                rules: 'terms and conditions',
+                termcondition2: 'in their entirety.',
+                signin: 'Sign In',
+                cp_error_login_err: 'Invalid login or password',
+                cp_error_info_title: 'You cannot login because:',
+                cp_error_info: '<ul><li>You used an incorrect username or password</li><li>Your account may be suspended</li></ul>',
+                cp_error_solution_title: '<div class="solution-title">Try to solve the problem:</div>',
+                cp_error_solution: '<ul><li>Check your access code</li><li>Contact support if needed</li></ul>',
+                cp_error_title: 'Connection Error',
+                cp_error_server_connection: 'Unable to connect to the authentication server',
+                cp_portal_ifconfig_ip_address: 'IP Address:',
+                cp_portal_ifconfig_mac_address: 'MAC Address:'
+            };
+            this.updateUIWithLangText(this.langText);
         }
     }
 
@@ -564,11 +564,17 @@ class CaptivePortalAPI {
             // Keep existing script loading for Vanta
             $.when($.getMultiScripts(scripts, 'js/vanta/')).done(() => {
                 if (window.VANTA && window.VANTA[effect.toUpperCase()]) {
-                    window['VANTA'][effect.toUpperCase()]({
-                        ...this.settings.animate.params,
-                        ...preset
-                    });
+                    try {
+                        window['VANTA'][effect.toUpperCase()]({
+                            ...this.settings.animate.params,
+                            ...preset
+                        });
+                    } catch (error) {
+                        console.warn('VANTA effect failed to initialize:', error);
+                    }
                 }
+            }).fail(() => {
+                console.warn('VANTA scripts failed to load, continuing without animation');
             });
         }
     }
@@ -677,7 +683,7 @@ class CaptivePortalAPI {
         event.preventDefault();
         
         const code = document.getElementById('inputCode').value;
-        if (code.length !== 5) {
+        if (!code || code.length !== 5) {
             this.authorisationFailed();
             return;
         }
