@@ -159,6 +159,19 @@ class CaptivePortalAPI {
             Object.assign(this.settings, response);
         } catch (error) {
             console.error("Failed to load settings:", error);
+            // Provide fallback settings for development
+            this.settings = {
+                default_lang: 'en',
+                langs: { 'en': 'English', 'es': 'Español' },
+                layout: { enable_rules: true },
+                login: { control: false, attempts: 3, delay: 5 },
+                modal: {
+                    timeout: 5000,
+                    auth_failed_header_color: '#dc3545',
+                    conn_failed_header_color: '#dc3545',
+                    overlay_color: 'rgba(0,0,0,0.5)'
+                }
+            };
         }
     }
 
@@ -167,7 +180,8 @@ class CaptivePortalAPI {
             const response = await this.loadJson('/langs', language);
             Object.assign(this.langText, response);
             this.updateUIWithLangText(this.langText);
-        } catch {
+        } catch (error) {
+            console.error("Failed to load language file:", error);
             this.showModal({
                 title: 'An error occurred',
                 subtitle: 'Translation content is unavailable',
@@ -542,17 +556,19 @@ class CaptivePortalAPI {
     }
 
     initializeVantaEffect() {
-        if (this.settings.animate?.effect) {
+        if (this.settings.animate?.effect && typeof $ !== 'undefined' && $.getMultiScripts) {
             const effect = this.settings.animate.effect.toLowerCase();
             const preset = this.settings.animate.preset[effect];
             const scripts = [`three.r134.min.js`, `vanta.${effect}.min.js`];
 
             // Keep existing script loading for Vanta
             $.when($.getMultiScripts(scripts, 'js/vanta/')).done(() => {
-                window['VANTA'][effect.toUpperCase()]({
-                    ...this.settings.animate.params,
-                    ...preset
-                });
+                if (window.VANTA && window.VANTA[effect.toUpperCase()]) {
+                    window['VANTA'][effect.toUpperCase()]({
+                        ...this.settings.animate.params,
+                        ...preset
+                    });
+                }
             });
         }
     }
@@ -790,5 +806,17 @@ class CaptivePortalAPI {
 
 // Initialize the application when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    new CaptivePortalAPI();
+    try {
+        new CaptivePortalAPI();
+    } catch (error) {
+        console.error('Failed to initialize CaptivePortalAPI:', error);
+        // Fallback: at least show the basic form
+        document.getElementById('login_normal')?.classList.remove('d-none');
+        document.querySelectorAll('.row, .footer-isp-info').forEach(el => el.classList.add('ready'));
+    }
 });
+
+// Additional fallback for jQuery dependency issues
+if (typeof $ === 'undefined') {
+    console.warn('jQuery not loaded, some features may not work');
+}
