@@ -52,7 +52,7 @@ const updateLogo = () => {
 
 const setupLanguage = () => {
     const browserLang = (navigator.language || navigator.userLanguage).substring(0, 2).toLowerCase();
-    let lang = $.getCookie('lang') || browserLang;
+    let lang = $.getCookie('lang') || browserLang || 'es';
 
     if (!(lang in settings.langs)) {
         lang = settings.default_lang;

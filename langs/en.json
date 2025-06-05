@@ -1,11 +1,11 @@
 {
     "isp_info": {
-        "isp_name": "< ISP Name > - Internet Service Provider",
+        "isp_name": "Burbase Invitados - Internet Service Provider",
         "isp_address": "Street 10, City & Post Code etc.",
         "isp_id": "Other information."
     },
     "footer_isp_info": {},
-    "pagetitle": "User login system | < ISP Name >",
+    "pagetitle": "User login system | Burbase Invitados",
     "username": "Username (Login)",
     "inputUsername_placeholder": "-- enter Login, use correct case --",
     "userpass": "Password",
@@ -29,7 +29,7 @@
     "noscript": "Warning: To properly log into the system, JavaScript must be enabled.",
     "cp_portal_head_title": "User login system",
     "cp_portal_tooltip_title": "You do not have the code?",
-    "cp_portal_info": "Internet access in the network < ISP Name > requires a username and password, or access code. Please note that the login and password should be protected by the user against loss or access by third parties.",
+    "cp_portal_info": "Internet access in the network Burbase Invitados requires a username and password, or access code. Please note that the login and password should be protected by the user against loss or access by third parties.",
     "cp_portal_cookies_note": "This site uses cookies to store information on your computer. We use cookies to provide services at the highest level, including in a manner tailored to individual needs. Using the site without changing the setting of cookies is that they will be posted on your device endpoint.",
     "cp_portal_ifconfig_event_normal": "Network interface configuration",
     "cp_portal_ifconfig_event_none": "Network interface configuration",
