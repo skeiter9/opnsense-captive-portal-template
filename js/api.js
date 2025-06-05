@@ -682,6 +682,13 @@ class CaptivePortalAPI {
 
     async handleLogoff(event) {
         event.preventDefault();
+        
+        // Development mode detection
+        if (window.location.hostname === '0.0.0.0' || window.location.hostname === 'localhost' || window.location.port === '5000') {
+            window.location.reload();
+            return;
+        }
+
         try {
             await fetch('/api/captiveportal/access/logoff/', {
                 method: 'POST',
@@ -700,6 +707,23 @@ class CaptivePortalAPI {
     }
 
     async authenticateUser(credentials) {
+        // Development mode detection
+        if (window.location.hostname === '0.0.0.0' || window.location.hostname === 'localhost' || window.location.port === '5000') {
+            // Mock authentication for development
+            const mockResponse = {
+                clientState: credentials.user === 'te' && credentials.password === 'st1' ? 'AUTHORIZED' : 'UNAUTHORIZED',
+                authType: 'normal',
+                ipAddress: '192.168.1.100',
+                macAddress: '00:11:22:33:44:55'
+            };
+            
+            setTimeout(async () => {
+                await this.clientInfo(mockResponse);
+                this.connectionLogon(mockResponse);
+            }, 500); // Simulate network delay
+            return;
+        }
+
         try {
             const response = await fetch('/api/captiveportal/access/logon/', {
                 method: 'POST',
@@ -726,6 +750,21 @@ class CaptivePortalAPI {
     }
 
     async checkConnectionStatus() {
+        // Development mode detection
+        if (window.location.hostname === '0.0.0.0' || window.location.hostname === 'localhost' || window.location.port === '5000') {
+            // Mock data for development
+            const mockData = {
+                clientState: 'UNAUTHORIZED',
+                authType: 'normal',
+                ipAddress: '192.168.1.100',
+                macAddress: '00:11:22:33:44:55'
+            };
+            
+            await this.clientInfo(mockData);
+            this.connectionStatus(mockData);
+            return;
+        }
+
         try {
             const response = await fetch('/api/captiveportal/access/status/', {
                 method: 'POST',
