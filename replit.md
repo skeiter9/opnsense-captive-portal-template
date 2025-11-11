@@ -4,6 +4,8 @@ This is a multilingual Captive Portal template designed for OPNsense firewall/ro
 
 The project is primarily a frontend application that integrates with OPNsense's captive portal API endpoints. It includes a lightweight Node.js development server for testing and preview purposes.
 
+**Important:** This template is tested and designed for OPNsense 25.1. The development mock server simulates OPNsense API behavior but may differ from the actual captive portal implementation in production.
+
 # Recent Changes
 
 **November 11, 2025 - OPNsense API Enhancements & Session Management**
