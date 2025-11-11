@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connected - Burbase Invitados</title>
+    <title>Conectado - Burbase Invitados</title>
     <style>
         * {
             margin: 0;
@@ -210,17 +210,25 @@
         </p>
 
         <div class="info-box">
-            <h3>Información de Conexión</h3>
+            <h3 id="info-title">Información de Conexión</h3>
             <div class="info-item">
-                <span class="info-label">Estado:</span>
-                <span class="info-value">Conectado</span>
+                <span class="info-label" id="label-status">Estado:</span>
+                <span class="info-value" id="value-status">Conectado</span>
+            </div>
+            <div class="info-item" id="ticket-type-row" style="display: none;">
+                <span class="info-label" id="label-ticket">Ticket:</span>
+                <span class="info-value" id="ticket-type">1 Hora</span>
+            </div>
+            <div class="info-item" id="duration-row" style="display: none;">
+                <span class="info-label" id="label-duration">Duración:</span>
+                <span class="info-value" id="session-duration">1 hora</span>
             </div>
             <div class="info-item">
-                <span class="info-label">Red:</span>
+                <span class="info-label" id="label-network">Red:</span>
                 <span class="info-value">Burbase Invitados</span>
             </div>
             <div class="info-item">
-                <span class="info-label">IP:</span>
+                <span class="info-label" id="label-ip">IP:</span>
                 <span class="info-value" id="user-ip">Obteniendo...</span>
             </div>
         </div>
@@ -234,6 +242,111 @@
     </div>
 
     <script>
+        // Translations
+        const translations = {
+            en: {
+                title: 'Connection Successful!',
+                subtitle: 'Your device now has internet access through the Burbase Invitados network.',
+                infoTitle: 'Connection Information',
+                labelStatus: 'Status:',
+                valueStatus: 'Connected',
+                labelTicket: 'Ticket:',
+                labelDuration: 'Duration:',
+                labelNetwork: 'Network:',
+                labelIP: 'IP:',
+                button: 'Start Browsing',
+                footer: 'Burbase Invitados',
+                location: 'Cedro del Pasto, Cajamarca, Peru',
+                ipLoading: 'Loading...',
+                ipUnavailable: 'Not available',
+                tickets: {
+                    hour: '1 Hour',
+                    day: '1 Day',
+                    week: '1 Week',
+                    month: '1 Month'
+                }
+            },
+            es: {
+                title: '¡Conexión Exitosa!',
+                subtitle: 'Tu dispositivo ahora tiene acceso a Internet a través de la red de Burbase Invitados.',
+                infoTitle: 'Información de Conexión',
+                labelStatus: 'Estado:',
+                valueStatus: 'Conectado',
+                labelTicket: 'Ticket:',
+                labelDuration: 'Duración:',
+                labelNetwork: 'Red:',
+                labelIP: 'IP:',
+                button: 'Comenzar a Navegar',
+                footer: 'Burbase Invitados',
+                location: 'Cedro del Pasto, Cajamarca, Perú',
+                ipLoading: 'Obteniendo...',
+                ipUnavailable: 'No disponible',
+                tickets: {
+                    hour: '1 Hora',
+                    day: '1 Día',
+                    week: '1 Semana',
+                    month: '1 Mes'
+                }
+            }
+        };
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionTimeout = parseInt(urlParams.get('timeout')) || 0;
+        const lang = urlParams.get('lang') || 'es';
+        const t = translations[lang] || translations['es'];
+
+        // Apply translations
+        document.querySelector('h1').textContent = t.title;
+        document.querySelector('.subtitle').textContent = t.subtitle;
+        document.getElementById('info-title').textContent = t.infoTitle;
+        document.getElementById('label-status').textContent = t.labelStatus;
+        document.getElementById('value-status').textContent = t.valueStatus;
+        document.getElementById('label-ticket').textContent = t.labelTicket;
+        document.getElementById('label-duration').textContent = t.labelDuration;
+        document.getElementById('label-network').textContent = t.labelNetwork;
+        document.getElementById('label-ip').textContent = t.labelIP;
+        document.querySelector('.button').textContent = t.button;
+        document.querySelector('.footer strong').textContent = t.footer;
+        document.querySelector('.footer').innerHTML = `<strong>${t.footer}</strong><br>${t.location}`;
+        document.getElementById('user-ip').textContent = t.ipLoading;
+
+        // Determine ticket type and duration from session timeout
+        function getTicketInfo(seconds) {
+            const hour = 3600;
+            const day = 86400;
+            const week = 604800;
+            const month = 2592000; // 30 days
+
+            // Allow 5% margin for rounding
+            const margin = 1.05;
+
+            if (seconds <= hour * margin) {
+                return { type: t.tickets.hour, duration: '1 ' + (lang === 'es' ? 'hora' : 'hour') };
+            } else if (seconds <= day * margin) {
+                return { type: t.tickets.day, duration: '1 ' + (lang === 'es' ? 'día' : 'day') };
+            } else if (seconds <= week * margin) {
+                return { type: t.tickets.week, duration: '1 ' + (lang === 'es' ? 'semana' : 'week') };
+            } else if (seconds <= month * margin) {
+                return { type: t.tickets.month, duration: '1 ' + (lang === 'es' ? 'mes' : 'month') };
+            } else {
+                const days = Math.floor(seconds / day);
+                return { 
+                    type: days + ' ' + (lang === 'es' ? 'Días' : 'Days'),
+                    duration: days + ' ' + (lang === 'es' ? 'días' : 'days')
+                };
+            }
+        }
+
+        // Display ticket information if available
+        if (sessionTimeout > 0) {
+            const ticketInfo = getTicketInfo(sessionTimeout);
+            document.getElementById('ticket-type').textContent = ticketInfo.type;
+            document.getElementById('session-duration').textContent = ticketInfo.duration;
+            document.getElementById('ticket-type-row').style.display = 'flex';
+            document.getElementById('duration-row').style.display = 'flex';
+        }
+
         // Get user's IP if possible
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
@@ -241,12 +354,11 @@
                 document.getElementById('user-ip').textContent = data.ip;
             })
             .catch(() => {
-                document.getElementById('user-ip').textContent = 'No disponible';
+                document.getElementById('user-ip').textContent = t.ipUnavailable;
             });
 
         // Auto-redirect after 5 seconds
         setTimeout(() => {
-            const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('redirect') || 'https://www.google.com';
             window.location.href = redirectUrl;
         }, 5000);

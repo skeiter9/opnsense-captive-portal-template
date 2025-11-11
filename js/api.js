@@ -468,7 +468,13 @@ class CaptivePortalAPI {
             }
 
             if (this.settings.layout?.redirect_url?.length > 0 && this.isValidUrl(this.settings.layout.redirect_url)) {
-                window.location.replace(this.settings.layout.redirect_url);
+                let redirectUrl = this.settings.layout.redirect_url;
+                if (data.acc_session_timeout || data.sessionTimeoutRemaining) {
+                    const timeout = data.acc_session_timeout || data.sessionTimeoutRemaining;
+                    const lang = this.lang || 'en';
+                    redirectUrl += `?timeout=${timeout}&lang=${lang}`;
+                }
+                window.location.replace(redirectUrl);
             } else if (this.getUrlParams()['redirurl'] !== undefined) {
                 window.location = this.getUrlParams()['redirurl'] + '?refresh';
             } else {

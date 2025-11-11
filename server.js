@@ -124,9 +124,29 @@ function handleCaptivePortalAPI(req, res, pathname) {
                 let mockResponse;
                 const clientIP = req.socket.remoteAddress || '192.168.1.100';
                 
-                // Demo credentials: username "te", password "st1" = access code "test1"
-                if (user === 'te' && password === 'st1') {
-                    const sessionTimeout = 3600; // 1 hour
+                // Demo credentials with different ticket durations:
+                // "hour" / "1" = 1 hour ticket
+                // "day" / "1" = 1 day ticket
+                // "week" / "1" = 1 week ticket
+                // "month" / "1" = 1 month ticket
+                let sessionTimeout = 0;
+                let isValid = false;
+                
+                if (user === 'hour' && password === '1') {
+                    sessionTimeout = 3600; // 1 hour
+                    isValid = true;
+                } else if (user === 'day' && password === '1') {
+                    sessionTimeout = 86400; // 1 day
+                    isValid = true;
+                } else if (user === 'week' && password === '1') {
+                    sessionTimeout = 604800; // 1 week
+                    isValid = true;
+                } else if (user === 'month' && password === '1') {
+                    sessionTimeout = 2592000; // 30 days (1 month)
+                    isValid = true;
+                }
+                
+                if (isValid) {
                     mockResponse = {
                         clientState: 'AUTHORIZED',
                         authType: 'normal',
