@@ -98,6 +98,7 @@ function handleCaptivePortalAPI(req, res, pathname) {
             const params = new URLSearchParams(body);
             const user = params.get('user') || '';
             const password = params.get('password') || '';
+            const accessCode = params.get('code') || '';
             
             // Extract zone ID from path if present
             const zoneMatch = pathname.match(/\/(\d+)\//);
@@ -124,38 +125,68 @@ function handleCaptivePortalAPI(req, res, pathname) {
                 let mockResponse;
                 const clientIP = req.socket.remoteAddress || '192.168.1.100';
                 
-                // Demo credentials with different ticket durations:
+                // Demo credentials and access codes with different ticket durations:
+                // Access Codes (easier for testing):
+                // "HOUR1" = 1 hour ticket
+                // "DAY24" = 1 day ticket  
+                // "WEEK7" = 1 week ticket
+                // "MONTH30" = 1 month ticket
+                // Username/Password (alternative):
                 // "hour" / "1" = 1 hour ticket
                 // "day" / "1" = 1 day ticket
                 // "week" / "1" = 1 week ticket
                 // "month" / "1" = 1 month ticket
                 let sessionTimeout = 0;
                 let isValid = false;
+                let authMethod = '';
                 
-                if (user === 'hour' && password === '1') {
+                // Check access codes first (most common use case)
+                if (accessCode === 'HOUR1') {
                     sessionTimeout = 3600; // 1 hour
                     isValid = true;
+                    authMethod = 'code';
+                } else if (accessCode === 'DAY24') {
+                    sessionTimeout = 86400; // 1 day
+                    isValid = true;
+                    authMethod = 'code';
+                } else if (accessCode === 'WEEK7') {
+                    sessionTimeout = 604800; // 1 week
+                    isValid = true;
+                    authMethod = 'code';
+                } else if (accessCode === 'MONTH30') {
+                    sessionTimeout = 2592000; // 30 days (1 month)
+                    isValid = true;
+                    authMethod = 'code';
+                }
+                // Fallback to username/password
+                else if (user === 'hour' && password === '1') {
+                    sessionTimeout = 3600; // 1 hour
+                    isValid = true;
+                    authMethod = 'password';
                 } else if (user === 'day' && password === '1') {
                     sessionTimeout = 86400; // 1 day
                     isValid = true;
+                    authMethod = 'password';
                 } else if (user === 'week' && password === '1') {
                     sessionTimeout = 604800; // 1 week
                     isValid = true;
+                    authMethod = 'password';
                 } else if (user === 'month' && password === '1') {
                     sessionTimeout = 2592000; // 30 days (1 month)
                     isValid = true;
+                    authMethod = 'password';
                 }
                 
                 if (isValid) {
                     mockResponse = {
                         clientState: 'AUTHORIZED',
-                        authType: 'normal',
+                        authType: authMethod === 'code' ? 'voucher' : 'normal',
                         ipAddress: clientIP,
                         macAddress: '00:11:22:33:44:55',
                         startTime: Math.floor(Date.now() / 1000),
                         acc_session_timeout: sessionTimeout,
                         sessionTimeoutRemaining: sessionTimeout,
-                        userName: user,
+                        userName: authMethod === 'code' ? accessCode : user,
                         zoneId: zoneId
                     };
                     

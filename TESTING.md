@@ -4,7 +4,18 @@
 
 The development server includes mock authentication with different ticket durations for testing.
 
-### Test Accounts
+### Test Access Codes (Recommended)
+
+Simply enter these codes in the "Access Code" field:
+
+| Access Code | Ticket Type | Duration |
+|-------------|-------------|----------|
+| `HOUR1`     | 1 Hour      | 3,600 seconds |
+| `DAY24`     | 1 Day       | 86,400 seconds |
+| `WEEK7`     | 1 Week      | 604,800 seconds |
+| `MONTH30`   | 1 Month     | 2,592,000 seconds |
+
+### Test Username/Password (Alternative)
 
 | Username | Password | Ticket Type | Duration |
 |----------|----------|-------------|----------|
