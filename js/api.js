@@ -764,17 +764,16 @@ class CaptivePortalAPI {
         event.preventDefault();
         
         const code = document.getElementById('inputCode').value;
-        if (!code || code.length !== 5) {
+        if (!code || code.length < 5) {
             this.authorisationFailed();
             return;
         }
         
-        const username = code.substring(0, 2);
-        const password = code.substring(2, 5);
-        
+        // Send as access code parameter
         this.authenticateUser({
-            user: username,
-            password: password,
+            code: code,
+            user: '',
+            password: ''
         });
     }
 
