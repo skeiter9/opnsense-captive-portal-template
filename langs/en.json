@@ -72,5 +72,12 @@
     "cp_login_attempt_minute": "minute",
     "cp_login_attempt_minutes": "minutes",
     "session_timeout_text": "Session expires in:",
-    "session_expired_text": "Session expired. Please log in again."
+    "session_expired_text": "Session expired. Please log in again.",
+    "time_widget_title": "Time Remaining",
+    "ticket_type_text": "Ticket:",
+    "ticket_1hour": "1 Hour",
+    "ticket_1day": "1 Day",
+    "ticket_1week": "1 Week",
+    "ticket_1month": "1 Month",
+    "ticket_days": "Days"
 }

@@ -521,6 +521,7 @@ class CaptivePortalAPI {
             
             if (data.acc_session_timeout || data.sessionTimeoutRemaining) {
                 this.startSessionTimeout(data);
+                this.showTimeWidget(data);
             }
         } else {
             this.stopSessionTimeout();
@@ -624,6 +625,89 @@ class CaptivePortalAPI {
         const timeoutElement = document.getElementById('session_timeout');
         if (timeoutElement) {
             timeoutElement.style.display = 'none';
+        }
+        this.hideTimeWidget();
+    }
+    
+    showTimeWidget(data) {
+        const widget = document.getElementById('time-widget');
+        if (!widget) return;
+        
+        const closeBtn = document.getElementById('time-widget-close');
+        if (closeBtn && !closeBtn.hasAttribute('data-listener')) {
+            closeBtn.addEventListener('click', () => this.hideTimeWidget());
+            closeBtn.setAttribute('data-listener', 'true');
+        }
+        
+        const titleElement = document.getElementById('time-widget-title');
+        if (titleElement) {
+            titleElement.textContent = this.langText.time_widget_title || 'Time Remaining';
+        }
+        
+        const ticketElement = document.getElementById('time-widget-ticket');
+        if (ticketElement && data.acc_session_timeout) {
+            const ticketInfo = this.getTicketTypeFromTimeout(data.acc_session_timeout);
+            ticketElement.textContent = ticketInfo;
+        }
+        
+        widget.style.display = 'block';
+        this.updateTimeWidget(data);
+    }
+    
+    hideTimeWidget() {
+        const widget = document.getElementById('time-widget');
+        if (widget) {
+            widget.style.display = 'none';
+        }
+    }
+    
+    updateTimeWidget(data) {
+        const countdownElement = document.getElementById('time-widget-countdown');
+        if (!countdownElement) return;
+        
+        let remainingSeconds = data.sessionTimeoutRemaining || data.acc_session_timeout;
+        if (!remainingSeconds) return;
+        
+        const startTime = data.startTime || Math.floor(Date.now() / 1000);
+        
+        const updateDisplay = () => {
+            const elapsed = Math.floor(Date.now() / 1000) - startTime;
+            const remaining = Math.max(0, remainingSeconds - elapsed);
+            
+            if (remaining > 0) {
+                countdownElement.textContent = this.formatTime(remaining);
+            } else {
+                countdownElement.textContent = '00:00:00';
+                this.stopSessionTimeout();
+            }
+        };
+        
+        updateDisplay();
+        if (!this.sessionTimeoutInterval) {
+            this.sessionTimeoutInterval = setInterval(updateDisplay, 1000);
+        }
+    }
+    
+    getTicketTypeFromTimeout(seconds) {
+        const hour = 3600;
+        const day = 86400;
+        const week = 604800;
+        const month = 2592000;
+        const margin = 1.05;
+        
+        const ticketText = this.langText.ticket_type_text || 'Ticket:';
+        
+        if (seconds <= hour * margin) {
+            return `${ticketText} ${this.langText.ticket_1hour || '1 Hour'}`;
+        } else if (seconds <= day * margin) {
+            return `${ticketText} ${this.langText.ticket_1day || '1 Day'}`;
+        } else if (seconds <= week * margin) {
+            return `${ticketText} ${this.langText.ticket_1week || '1 Week'}`;
+        } else if (seconds <= month * margin) {
+            return `${ticketText} ${this.langText.ticket_1month || '1 Month'}`;
+        } else {
+            const days = Math.floor(seconds / day);
+            return `${ticketText} ${days} ${this.langText.ticket_days || 'Days'}`;
         }
     }
 
