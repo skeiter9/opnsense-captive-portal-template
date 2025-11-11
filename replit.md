@@ -27,8 +27,8 @@ The project is primarily a frontend application that integrates with OPNsense's 
   - Fully localized error messages
 
 **November 11, 2025 - Minimalistic Green Design Update**
-- Redesigned with a clean, minimalistic approach using fresh green as primary color
-- Updated color scheme to use modern emerald green gradients (#10b981, #059669) with pure white backgrounds
+- Redesigned with a clean, minimalistic approach using forest green as primary color
+- Updated color scheme to use forest green gradients (#228B22, #1a6b1a) with pure white backgrounds
 - Simplified visual effects:
   - Reduced shadow intensity for cleaner look
   - Minimized hover animations (subtle 1px lift instead of 2px)
