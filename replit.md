@@ -6,29 +6,46 @@ The project is primarily a frontend application that integrates with OPNsense's 
 
 # Recent Changes
 
-**November 11, 2025 - Modern Minimalistic Design Update**
+**November 11, 2025 - Complete Modern Minimalistic Redesign with WCAG AA Accessibility**
 - Completely redesigned the visual theme with a modern, minimalistic approach
-- Updated color scheme to use modern purple gradients (#667eea, #764ba2) with clean whites and soft grays
+- Implemented WCAG AA accessible color scheme with deep purple gradients (#5b21b6, #6b21a8):
+  - All text meets WCAG AA contrast requirements (4.5:1 for normal text, 3:1 for large text)
+  - Button gradient: #5b21b6 to #6b21a8 with white text (>7.9:1 contrast)
+  - Field labels: #4c51bf on white background (>4.5:1 contrast)
+  - Body text/pretext: #4a5568 on white background (>4.5:1 contrast)
+  - Links and focus states: #4c51bf and #5b21b6
 - Enhanced responsive design with comprehensive breakpoints for all devices:
   - Desktop and laptops (>1200px)
   - Tablets (768px - 1200px)
   - Standard mobile phones (480px - 768px)
   - Small phones (360px - 480px)
-  - Very small screens (<360px)
-- Optimized for old Android devices with:
-  - Minimum 16px font size on inputs to prevent zoom on iOS
-  - Touch-friendly buttons (44px minimum tap target)
-  - Reduced shadows and simplified effects for better performance
+  - Very small screens (<360px) with optimized spacing and text wrapping
+- Full keyboard accessibility:
+  - Visible focus indicators on all interactive elements (3px solid outlines with offsets)
+  - No focus state clipping (overflow: visible on containers)
+  - Proper focus-within styles for input fields
+  - All focus states meet WCAG 2.4.7 requirements
+- Optimized for old Android devices and legacy browsers:
+  - Minimum 16px font size on inputs to prevent auto-zoom on iOS
+  - Touch-friendly buttons (48px minimum tap target)
   - Hardware-accelerated transitions using CSS transforms
   - Fallback support for browsers without backdrop-filter
-- Created comprehensive custom.css with:
-  - Modern shadow system (sm, md, lg, xl)
+  - Reduced shadows and simplified effects for better performance
+- Modern visual features:
+  - Pill-shaped buttons with accessible gradient backgrounds
+  - Floating labels inside input fields
+  - Glassmorphism effects with clean white cards
+  - Modern shadow system (subtle, soft, medium, dramatic)
   - Smooth cubic-bezier transitions
-  - Touch device optimizations
-  - Reduced motion support for accessibility
+  - Centered, spacious layout with generous padding
+- Accessibility features:
+  - WCAG AA compliant color contrast throughout
+  - Reduced motion support for users with vestibular disorders
+  - Proper semantic HTML structure
+  - Keyboard navigation support
   - Webkit/iOS specific optimizations
-- Updated settings.json with modern color palette
-- Maintained all existing functionality while improving visual presentation
+- Updated settings.json with accessible color palette
+- Maintained all existing functionality while completely modernizing visual presentation
 
 # User Preferences
 
