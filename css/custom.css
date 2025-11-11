@@ -1,0 +1,314 @@
+:root {
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.captiveportal {
+    section {
+        background: var(--bg_section, #f5f7fa);
+    }
+    
+    .left-side .wrapper {
+        box-shadow: var(--shadow-xl);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .right-side .wrapper {
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .logo {
+        transition: var(--transition-smooth);
+        box-shadow: var(--shadow-sm);
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+    }
+    
+    .heading-title {
+        font-weight: 300;
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+    }
+    
+    .field-type-text {
+        border: 1px solid var(--input_field_border, #e2e8f0);
+        border-radius: 12px;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-smooth);
+        background: var(--input_field_bg, #ffffff);
+        
+        &:hover {
+            border-color: #cbd5e0;
+            box-shadow: var(--shadow-md);
+        }
+        
+        &:focus-within {
+            border-color: var(--link, #667eea);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        
+        label {
+            font-weight: 500;
+            color: var(--color_primary, #4a5568);
+            font-size: 0.875rem;
+        }
+        
+        .field {
+            border: none !important;
+            background: transparent;
+            box-shadow: none !important;
+            font-size: 1rem;
+            color: var(--input_field_color, #2d3748);
+            
+            &:focus {
+                box-shadow: none !important;
+            }
+        }
+    }
+    
+    button {
+        border-radius: 12px !important;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        transition: var(--transition-smooth);
+        box-shadow: var(--shadow-md);
+        border: none;
+        
+        &:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        
+        &:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+    }
+    
+    .field-type-checkbox {
+        input[type="checkbox"] {
+            transition: var(--transition-fast);
+        }
+        
+        .text {
+            color: var(--color_primary, #4a5568);
+            line-height: 1.6;
+        }
+        
+        .link {
+            font-weight: 500;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+    }
+    
+    .interface-config {
+        font-size: 0.8125rem;
+        color: var(--color_primary, #4a5568);
+        
+        .if-title {
+            font-weight: 600;
+        }
+    }
+    
+    .footer-isp-info {
+        font-size: 0.75rem;
+        color: var(--color_primary, #718096);
+        opacity: 0.8;
+    }
+    
+    .isp-info {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .captiveportal {
+        .left-side .wrapper,
+        .right-side .wrapper {
+            padding: 3rem 2rem;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .captiveportal {
+        .left-side .wrapper,
+        .right-side .wrapper {
+            padding: 2.5rem 1.5rem;
+            border-radius: 12px;
+        }
+        
+        .heading-title {
+            font-size: 1.5rem;
+        }
+        
+        .logo img {
+            width: 5rem;
+            height: 5rem;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 0.8125rem;
+        }
+        
+        .field-type-text {
+            margin-top: 0.75rem;
+            
+            label {
+                font-size: 0.8125rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .captiveportal {
+        .left-side .wrapper,
+        .right-side .wrapper {
+            padding: 2rem 1.25rem;
+            border-radius: 8px;
+        }
+        
+        .heading-title {
+            font-size: 1.25rem;
+        }
+        
+        .logo {
+            padding: 0.75rem;
+            
+            img {
+                width: 4rem;
+                height: 4rem;
+            }
+        }
+        
+        button {
+            min-height: 44px;
+            padding: 10px 20px;
+            font-size: 0.75rem;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .field-type-text {
+            padding-left: 0.75rem;
+            
+            .field {
+                padding: 0.625rem 0.875rem;
+                font-size: 16px;
+            }
+        }
+        
+        .interface-config {
+            font-size: 0.75rem;
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+@media (max-width: 360px) {
+    .captiveportal {
+        .left-side .wrapper,
+        .right-side .wrapper {
+            padding: 1.5rem 1rem;
+        }
+        
+        .heading-title {
+            font-size: 1.125rem;
+        }
+        
+        .logo img {
+            width: 3.5rem;
+            height: 3.5rem;
+        }
+    }
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+    .captiveportal .left-side .wrapper {
+        background-image: var(--bg_left_side);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .captiveportal button:hover {
+        transform: none;
+    }
+    
+    .captiveportal button:active {
+        transform: scale(0.98);
+    }
+}
+
+input,
+button,
+select,
+textarea {
+    font-size: 16px !important;
+}
+
+@media (min-width: 769px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    button:not(.size-xs),
+    select,
+    textarea {
+        font-size: 1rem !important;
+    }
+}
+
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+button,
+a,
+input,
+label {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+input[type="text"],
+textarea {
+    -webkit-user-select: text;
+    user-select: text;
+}
