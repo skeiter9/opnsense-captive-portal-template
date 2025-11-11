@@ -196,9 +196,116 @@
                 height: 32px;
             }
         }
+
+        /* Floating Time Widget */
+        .time-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #145214 0%, #0d3d0d 100%);
+            color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(20, 82, 20, 0.4);
+            min-width: 280px;
+            z-index: 9999;
+            animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) 1s both;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .time-widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .time-widget-title {
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .time-widget-close {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .time-widget-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .time-widget-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .time-widget-countdown {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 12px;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+        }
+
+        .time-widget-ticket {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .time-widget {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+            }
+            
+            .time-widget-countdown {
+                font-size: 36px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Floating Time Widget -->
+    <div id="time-widget" class="time-widget" style="display: none;">
+        <div class="time-widget-header">
+            <span class="time-widget-title" id="widget-title">Tiempo Restante</span>
+            <button class="time-widget-close" id="widget-close">&times;</button>
+        </div>
+        <div class="time-widget-body">
+            <div class="time-widget-countdown" id="widget-countdown">00:00:00</div>
+            <div class="time-widget-ticket" id="widget-ticket"></div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="success-icon">
             <div class="checkmark"></div>
@@ -357,11 +464,77 @@
                 document.getElementById('user-ip').textContent = t.ipUnavailable;
             });
 
-        // Auto-redirect after 5 seconds
+        // Auto-redirect disabled - widget will track time
+        // setTimeout(() => {
+        //     const redirectUrl = urlParams.get('redirect') || 'https://www.google.com';
+        //     window.location.href = redirectUrl;
+        // }, 5000);
+
+        // Floating Time Widget
+        let countdownInterval = null;
+
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function showTimeWidget() {
+            if (sessionTimeout <= 0) return;
+
+            const widget = document.getElementById('time-widget');
+            const countdownEl = document.getElementById('widget-countdown');
+            const ticketEl = document.getElementById('widget-ticket');
+            const titleEl = document.getElementById('widget-title');
+            const closeBtn = document.getElementById('widget-close');
+
+            // Set translations
+            titleEl.textContent = lang === 'es' ? 'Tiempo Restante' : 'Time Remaining';
+            
+            // Set ticket info
+            const ticketInfo = getTicketInfo(sessionTimeout);
+            ticketEl.textContent = (lang === 'es' ? 'Ticket: ' : 'Ticket: ') + ticketInfo.type;
+
+            // Show widget
+            widget.style.display = 'block';
+
+            // Start countdown
+            let remainingSeconds = sessionTimeout;
+            const startTime = Date.now();
+
+            function updateCountdown() {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const remaining = Math.max(0, remainingSeconds - elapsed);
+
+                if (remaining > 0) {
+                    countdownEl.textContent = formatTime(remaining);
+                } else {
+                    countdownEl.textContent = '00:00:00';
+                    clearInterval(countdownInterval);
+                    // Session expired - could reload or show message
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }
+            }
+
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+
+            // Close button
+            closeBtn.addEventListener('click', () => {
+                widget.style.display = 'none';
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+            });
+        }
+
+        // Show widget after page loads
         setTimeout(() => {
-            const redirectUrl = urlParams.get('redirect') || 'https://www.google.com';
-            window.location.href = redirectUrl;
-        }, 5000);
+            showTimeWidget();
+        }, 1000);
     </script>
 </body>
 </html>
