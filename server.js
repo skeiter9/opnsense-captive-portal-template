@@ -66,6 +66,9 @@ const server = http.createServer((req, res) => {
     });
 });
 
+// Session storage for mock authenticated users
+const sessions = new Map();
+
 // Mock OPNsense Captive Portal API for development
 function handleCaptivePortalAPI(req, res, pathname) {
     // Set CORS headers for development
@@ -76,6 +79,12 @@ function handleCaptivePortalAPI(req, res, pathname) {
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
         res.end();
+        return;
+    }
+    
+    // Modern Portal API (RFC 8908) - GET endpoint
+    if (req.method === 'GET' && pathname.includes('/api/captiveportal/access/api')) {
+        handleModernPortalAPI(req, res);
         return;
     }
     
@@ -90,12 +99,19 @@ function handleCaptivePortalAPI(req, res, pathname) {
             const user = params.get('user') || '';
             const password = params.get('password') || '';
             
-            if (pathname === '/api/captiveportal/access/status/') {
-                // Mock status check - user is not authorized initially
-                const mockResponse = {
+            // Extract zone ID from path if present
+            const zoneMatch = pathname.match(/\/(\d+)\//);
+            const zoneId = zoneMatch ? zoneMatch[1] : '0';
+            
+            if (pathname.includes('/status')) {
+                // Mock status check
+                const clientIP = req.socket.remoteAddress || '192.168.1.100';
+                const session = sessions.get(clientIP);
+                
+                const mockResponse = session || {
                     clientState: 'UNAUTHORIZED',
                     authType: 'normal',
-                    ipAddress: '192.168.1.100',
+                    ipAddress: clientIP,
                     macAddress: '00:11:22:33:44:55',
                     startTime: Math.floor(Date.now() / 1000)
                 };
@@ -103,35 +119,47 @@ function handleCaptivePortalAPI(req, res, pathname) {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(mockResponse));
                 
-            } else if (pathname === '/api/captiveportal/access/logon/') {
+            } else if (pathname.includes('/logon')) {
                 // Mock login attempt
                 let mockResponse;
+                const clientIP = req.socket.remoteAddress || '192.168.1.100';
                 
                 // Demo credentials: username "te", password "st1" = access code "test1"
                 if (user === 'te' && password === 'st1') {
+                    const sessionTimeout = 3600; // 1 hour
                     mockResponse = {
                         clientState: 'AUTHORIZED',
                         authType: 'normal',
-                        ipAddress: '192.168.1.100',
+                        ipAddress: clientIP,
                         macAddress: '00:11:22:33:44:55',
                         startTime: Math.floor(Date.now() / 1000),
-                        acc_session_timeout: 3600 // 1 hour session
+                        acc_session_timeout: sessionTimeout,
+                        sessionTimeoutRemaining: sessionTimeout,
+                        userName: user,
+                        zoneId: zoneId
                     };
+                    
+                    // Store session for modern portal API
+                    sessions.set(clientIP, mockResponse);
                 } else {
                     mockResponse = {
                         clientState: 'UNAUTHORIZED',
                         authType: 'normal',
-                        ipAddress: '192.168.1.100',
+                        ipAddress: clientIP,
                         macAddress: '00:11:22:33:44:55',
-                        error: 'Invalid credentials'
+                        error: 'Invalid credentials',
+                        errorDetail: 'The access code you entered is incorrect. Please check and try again.'
                     };
                 }
                 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(mockResponse));
                 
-            } else if (pathname === '/api/captiveportal/access/logoff/') {
+            } else if (pathname.includes('/logoff')) {
                 // Mock logout
+                const clientIP = req.socket.remoteAddress || '192.168.1.100';
+                sessions.delete(clientIP);
+                
                 const mockResponse = {
                     clientState: 'UNAUTHORIZED',
                     authType: 'normal',
@@ -149,6 +177,38 @@ function handleCaptivePortalAPI(req, res, pathname) {
         res.writeHead(405);
         res.end('Method not allowed');
     }
+}
+
+// Modern Portal API (RFC 8908) - Returns captive portal status for modern devices
+function handleModernPortalAPI(req, res) {
+    const clientIP = req.socket.remoteAddress || '192.168.1.100';
+    const session = sessions.get(clientIP);
+    
+    let response;
+    
+    if (session && session.clientState === 'AUTHORIZED') {
+        // User is authenticated
+        const elapsed = Math.floor(Date.now() / 1000) - session.startTime;
+        const remaining = Math.max(0, session.acc_session_timeout - elapsed);
+        
+        response = {
+            captive: false,
+            'user-portal-url': `http://127.0.0.1:${PORT}/`,
+            'venue-info-url': null,
+            'seconds-remaining': remaining,
+            'bytes-remaining': null
+        };
+    } else {
+        // User needs to authenticate
+        response = {
+            captive: true,
+            'user-portal-url': `http://127.0.0.1:${PORT}/`,
+            'venue-info-url': null
+        };
+    }
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(response));
 }
 
 server.listen(PORT, '0.0.0.0', () => {
