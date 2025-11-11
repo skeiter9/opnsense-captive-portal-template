@@ -6,6 +6,26 @@ The project is primarily a frontend application that integrates with OPNsense's 
 
 # Recent Changes
 
+**November 11, 2025 - OPNsense API Enhancements & Session Management**
+- Added Modern Portal API (RFC 8908) endpoint for iOS/Android captive portal detection
+  - Implements standardized `/api/captiveportal/access/modernapi/` endpoint
+  - Provides capport.json with proper venue info and user portal URLs
+  - Improves automatic portal detection on modern mobile devices
+- Implemented real-time session timeout countdown display
+  - Shows remaining session time in HH:MM:SS format
+  - Updates every second with accurate countdown
+  - Automatically reloads portal when session expires
+  - Fully internationalized in English and Spanish
+- Enhanced zone-aware API integration
+  - Added zone ID tracking and support
+  - Properly handles multi-zone OPNsense configurations
+  - Zone-specific session management
+- Improved error messages for different authentication methods
+  - Differentiated error messages for username/password authentication
+  - Specific error handling for access code/voucher authentication
+  - More helpful troubleshooting steps for each auth type
+  - Fully localized error messages
+
 **November 11, 2025 - Minimalistic Green Design Update**
 - Redesigned with a clean, minimalistic approach using fresh green as primary color
 - Updated color scheme to use modern emerald green gradients (#10b981, #059669) with pure white backgrounds

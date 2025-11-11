@@ -370,11 +370,21 @@ class CaptivePortalAPI {
         return "";
     }
 
-    authorisationFailed(onClose = null) {
+    authorisationFailed(options = {}) {
+        const authType = options.authType || this.sessionData?.authType || 'normal';
+        
+        let errorInfo = this.langText.cp_error_info;
+        let errorSolution = this.langText.cp_error_solution;
+        
+        if (authType === 'voucher' || authType === 'code') {
+            errorInfo = this.langText.cp_error_code_info || this.langText.cp_error_info;
+            errorSolution = this.langText.cp_error_code_solution || this.langText.cp_error_solution;
+        }
+        
         const modal = {
             title: this.langText.cp_error_login_err,
             subtitle: this.langText.cp_error_info_title,
-            content: this.langText.cp_error_info + this.langText.cp_error_solution_title + this.langText.cp_error_solution,
+            content: errorInfo + this.langText.cp_error_solution_title + errorSolution,
             iconText: '&#9888;',
             customStyles: {
                 headerColor: this.settings.modal?.auth_failed_header_color,
@@ -385,8 +395,12 @@ class CaptivePortalAPI {
             }
         };
 
-        if (onClose && typeof onClose === 'object') {
-            Object.assign(modal, onClose);
+        if (options.onClose) {
+            modal.onClose = options.onClose;
+        }
+        
+        if (options && typeof options === 'object') {
+            Object.assign(modal, options);
         }
 
         this.showModal(modal);
