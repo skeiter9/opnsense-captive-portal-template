@@ -17,7 +17,7 @@
     },
     "layout": {
         "enable_rules": true,
-        "redirect_url": ""
+        "redirect_url": "/success.html"
     },
     "css_params": {
         "bg_section": "#f0fdf4",
