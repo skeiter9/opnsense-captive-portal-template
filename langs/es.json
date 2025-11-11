@@ -68,5 +68,7 @@
     "cp_login_attempt_info_title": "Intentos de inicio de sesión excedidos",
     "cp_login_attempt_content": "El sistema permite %s intentos fallidos de inicio de sesión. Después de exceder el número de intentos, la capacidad de iniciar sesión será bloqueada por un período de %s %s.",
     "cp_login_attempt_minute": "minuto",
-    "cp_login_attempt_minutes": "minutos"
+    "cp_login_attempt_minutes": "minutos",
+    "session_timeout_text": "La sesión expira en:",
+    "session_expired_text": "Sesión expirada. Por favor, inicie sesión nuevamente."
 }

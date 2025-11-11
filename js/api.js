@@ -17,6 +17,9 @@ class CaptivePortalAPI {
         this.attempt = 0;
         this.langsRTL = ['ar', 'dv', 'fa', 'ha', 'he', 'sy'];
         this.root = document.documentElement;
+        this.sessionData = null;
+        this.sessionTimeoutInterval = null;
+        this.zoneId = '0';
         
         this.init();
     }
@@ -491,16 +494,25 @@ class CaptivePortalAPI {
         }
 
         if (data.clientState === 'AUTHORIZED') {
+            this.sessionData = data;
+            if (data.zoneId) this.zoneId = data.zoneId;
             document.getElementById('login_normal')?.classList.add('d-none');
             document.getElementById('logout_undefined')?.classList.remove('d-none');
-        } else if (data.authType === 'none') {
-            document.getElementById('login_normal')?.classList.add('d-none');
-            document.getElementById('login_none')?.classList.remove('d-none');
-        } else {
-            if (this.settings.login?.control && this.settings.login.attempts > 0 && this.isAttempt(data)) {
-                this.connectionBlocked(data.local);
+            
+            if (data.acc_session_timeout || data.sessionTimeoutRemaining) {
+                this.startSessionTimeout(data);
             }
-            document.getElementById('login_normal')?.classList.remove('d-none');
+        } else {
+            this.stopSessionTimeout();
+            if (data.authType === 'none') {
+                document.getElementById('login_normal')?.classList.add('d-none');
+                document.getElementById('login_none')?.classList.remove('d-none');
+            } else {
+                if (this.settings.login?.control && this.settings.login.attempts > 0 && this.isAttempt(data)) {
+                    this.connectionBlocked(data.local);
+                }
+                document.getElementById('login_normal')?.classList.remove('d-none');
+            }
         }
 
         document.querySelectorAll('.row, .footer-isp-info').forEach(el => el.classList.add('ready'));
@@ -544,6 +556,55 @@ class CaptivePortalAPI {
     getAttempt(data) {
         data.local = window.localStorage.getItem('loginAttempt');
         return data;
+    }
+
+    formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    startSessionTimeout(data) {
+        this.stopSessionTimeout();
+        
+        const timeoutElement = document.getElementById('session_timeout');
+        if (!timeoutElement) return;
+        
+        let remainingSeconds = data.sessionTimeoutRemaining || data.acc_session_timeout;
+        if (!remainingSeconds) return;
+        
+        const startTime = data.startTime || Math.floor(Date.now() / 1000);
+        
+        const updateDisplay = () => {
+            const elapsed = Math.floor(Date.now() / 1000) - startTime;
+            const remaining = Math.max(0, remainingSeconds - elapsed);
+            
+            if (remaining > 0) {
+                const timeText = this.langText.session_timeout_text || 'Session expires in:';
+                timeoutElement.textContent = `${timeText} ${this.formatTime(remaining)}`;
+                timeoutElement.style.display = 'block';
+            } else {
+                timeoutElement.textContent = this.langText.session_expired_text || 'Session expired. Please log in again.';
+                timeoutElement.style.display = 'block';
+                this.stopSessionTimeout();
+                setTimeout(() => window.location.reload(), 2000);
+            }
+        };
+        
+        updateDisplay();
+        this.sessionTimeoutInterval = setInterval(updateDisplay, 1000);
+    }
+
+    stopSessionTimeout() {
+        if (this.sessionTimeoutInterval) {
+            clearInterval(this.sessionTimeoutInterval);
+            this.sessionTimeoutInterval = null;
+        }
+        const timeoutElement = document.getElementById('session_timeout');
+        if (timeoutElement) {
+            timeoutElement.style.display = 'none';
+        }
     }
 
     // Modern API methods

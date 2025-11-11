@@ -68,5 +68,7 @@
     "cp_login_attempt_info_title": "Login attempts exceeded",
     "cp_login_attempt_content": "The system allows %s-repeat unsuccessful logins. After exceeding the number of retries, the ability to log in will be blocked for the period of %s %s.",
     "cp_login_attempt_minute": "minute",
-    "cp_login_attempt_minutes": "minutes"
+    "cp_login_attempt_minutes": "minutes",
+    "session_timeout_text": "Session expires in:",
+    "session_expired_text": "Session expired. Please log in again."
 }
