@@ -6,9 +6,14 @@ The project is primarily a frontend application that integrates with OPNsense's 
 
 # Recent Changes
 
-**November 11, 2025 - Modern Minimalistic Design Update**
-- Completely redesigned the visual theme with a modern, minimalistic approach
-- Updated color scheme to use modern purple gradients (#667eea, #764ba2) with clean whites and soft grays
+**November 11, 2025 - Minimalistic Green Design Update**
+- Redesigned with a clean, minimalistic approach using fresh green as primary color
+- Updated color scheme to use modern emerald green gradients (#10b981, #059669) with pure white backgrounds
+- Simplified visual effects:
+  - Reduced shadow intensity for cleaner look
+  - Minimized hover animations (subtle 1px lift instead of 2px)
+  - Removed unnecessary shadows from buttons and logos
+  - Cleaner border radius (8px for buttons, 12px for containers)
 - Enhanced responsive design with comprehensive breakpoints for all devices:
   - Desktop and laptops (>1200px)
   - Tablets (768px - 1200px)
@@ -18,16 +23,15 @@ The project is primarily a frontend application that integrates with OPNsense's 
 - Optimized for old Android devices with:
   - Minimum 16px font size on inputs to prevent zoom on iOS
   - Touch-friendly buttons (44px minimum tap target)
-  - Reduced shadows and simplified effects for better performance
+  - Lightweight shadows for better performance
   - Hardware-accelerated transitions using CSS transforms
-  - Fallback support for browsers without backdrop-filter
-- Created comprehensive custom.css with:
-  - Modern shadow system (sm, md, lg, xl)
-  - Smooth cubic-bezier transitions
-  - Touch device optimizations
   - Reduced motion support for accessibility
+- Created comprehensive custom.css with:
+  - Minimalistic shadow system with green tint
+  - Smooth cubic-bezier transitions (0.25s)
+  - Touch device optimizations
   - Webkit/iOS specific optimizations
-- Updated settings.json with modern color palette
+- Updated settings.json with fresh green color palette
 - Maintained all existing functionality while improving visual presentation
 
 # User Preferences
