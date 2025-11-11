@@ -4,25 +4,18 @@
 
 The development server includes mock authentication with different ticket durations for testing.
 
-### Test Access Codes (Recommended)
+### Test Access Codes
 
-Simply enter these codes in the "Access Code" field:
+Enter these 5-character codes in the "Access Code" field. The portal automatically splits them into username (first 2 characters) and password (last 3 characters) for OPNsense authentication.
 
-| Access Code | Ticket Type | Duration |
-|-------------|-------------|----------|
-| `HOUR1`     | 1 Hour      | 3,600 seconds |
-| `DAY24`     | 1 Day       | 86,400 seconds |
-| `WEEK7`     | 1 Week      | 604,800 seconds |
-| `MONTH30`   | 1 Month     | 2,592,000 seconds |
+| Access Code | Split As | Ticket Type | Duration |
+|-------------|----------|-------------|----------|
+| `HR001`     | User: HR, Pass: 001 | 1 Hour  | 3,600 seconds |
+| `DY001`     | User: DY, Pass: 001 | 1 Day   | 86,400 seconds |
+| `WK001`     | User: WK, Pass: 001 | 1 Week  | 604,800 seconds |
+| `MO001`     | User: MO, Pass: 001 | 1 Month | 2,592,000 seconds |
 
-### Test Username/Password (Alternative)
-
-| Username | Password | Ticket Type | Duration |
-|----------|----------|-------------|----------|
-| `hour`   | `1`      | 1 Hour      | 3,600 seconds |
-| `day`    | `1`      | 1 Day       | 86,400 seconds |
-| `week`   | `1`      | 1 Week      | 604,800 seconds |
-| `month`  | `1`      | 1 Month     | 2,592,000 seconds |
+**How it works:** When you enter "DY001", the portal sends username="DY" and password="001" to OPNsense. This matches OPNsense's expected format.
 
 ### Testing Workflow
 

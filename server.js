@@ -125,68 +125,40 @@ function handleCaptivePortalAPI(req, res, pathname) {
                 let mockResponse;
                 const clientIP = req.socket.remoteAddress || '192.168.1.100';
                 
-                // Demo credentials and access codes with different ticket durations:
-                // Access Codes (easier for testing):
-                // "HOUR1" = 1 hour ticket
-                // "DAY24" = 1 day ticket  
-                // "WEEK7" = 1 week ticket
-                // "MONTH30" = 1 month ticket
-                // Username/Password (alternative):
-                // "hour" / "1" = 1 hour ticket
-                // "day" / "1" = 1 day ticket
-                // "week" / "1" = 1 week ticket
-                // "month" / "1" = 1 month ticket
+                // Demo credentials with different ticket durations
+                // Test codes (5 characters: 2 for username + 3 for password):
+                // "HR001" = username "HR" + password "001" = 1 hour ticket
+                // "DY001" = username "DY" + password "001" = 1 day ticket  
+                // "WK001" = username "WK" + password "001" = 1 week ticket
+                // "MO001" = username "MO" + password "001" = 1 month ticket
                 let sessionTimeout = 0;
                 let isValid = false;
-                let authMethod = '';
                 
-                // Check access codes first (most common use case)
-                if (accessCode === 'HOUR1') {
+                // Check username/password combinations (OPNsense standard)
+                if (user === 'HR' && password === '001') {
                     sessionTimeout = 3600; // 1 hour
                     isValid = true;
-                    authMethod = 'code';
-                } else if (accessCode === 'DAY24') {
+                } else if (user === 'DY' && password === '001') {
                     sessionTimeout = 86400; // 1 day
                     isValid = true;
-                    authMethod = 'code';
-                } else if (accessCode === 'WEEK7') {
+                } else if (user === 'WK' && password === '001') {
                     sessionTimeout = 604800; // 1 week
                     isValid = true;
-                    authMethod = 'code';
-                } else if (accessCode === 'MONTH30') {
+                } else if (user === 'MO' && password === '001') {
                     sessionTimeout = 2592000; // 30 days (1 month)
                     isValid = true;
-                    authMethod = 'code';
-                }
-                // Fallback to username/password
-                else if (user === 'hour' && password === '1') {
-                    sessionTimeout = 3600; // 1 hour
-                    isValid = true;
-                    authMethod = 'password';
-                } else if (user === 'day' && password === '1') {
-                    sessionTimeout = 86400; // 1 day
-                    isValid = true;
-                    authMethod = 'password';
-                } else if (user === 'week' && password === '1') {
-                    sessionTimeout = 604800; // 1 week
-                    isValid = true;
-                    authMethod = 'password';
-                } else if (user === 'month' && password === '1') {
-                    sessionTimeout = 2592000; // 30 days (1 month)
-                    isValid = true;
-                    authMethod = 'password';
                 }
                 
                 if (isValid) {
                     mockResponse = {
                         clientState: 'AUTHORIZED',
-                        authType: authMethod === 'code' ? 'voucher' : 'normal',
+                        authType: 'normal',
                         ipAddress: clientIP,
                         macAddress: '00:11:22:33:44:55',
                         startTime: Math.floor(Date.now() / 1000),
                         acc_session_timeout: sessionTimeout,
                         sessionTimeoutRemaining: sessionTimeout,
-                        userName: authMethod === 'code' ? accessCode : user,
+                        userName: user,
                         zoneId: zoneId
                     };
                     
