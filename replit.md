@@ -6,46 +6,48 @@ The project is primarily a frontend application that integrates with OPNsense's 
 
 # Recent Changes
 
-**November 11, 2025 - Complete Modern Minimalistic Redesign with WCAG AA Accessibility**
-- Completely redesigned the visual theme with a modern, minimalistic approach
-- Implemented WCAG AA accessible color scheme with deep purple gradients (#5b21b6, #6b21a8):
+**November 11, 2025 - Complete Cyan/Blue Theme Redesign with WCAG AA Accessibility**
+- Completely redesigned the visual theme with a fresh, modern cyan/blue approach
+- Implemented WCAG AA accessible color scheme with dark blue tones (#0369a1, #075985):
   - All text meets WCAG AA contrast requirements (4.5:1 for normal text, 3:1 for large text)
-  - Button gradient: #5b21b6 to #6b21a8 with white text (>7.9:1 contrast)
-  - Field labels: #4c51bf on white background (>4.5:1 contrast)
-  - Body text/pretext: #4a5568 on white background (>4.5:1 contrast)
-  - Links and focus states: #4c51bf and #5b21b6
+  - Button gradient: #0369a1 to #075985 with white text (>6:1 contrast)
+  - Links: #0369a1 on white background (>6:1 contrast)
+  - Body text: #475569 on white background (>4.5:1 contrast)
+  - Labels: #1e293b with bold uppercase styling for clarity
+- Geometric header design:
+  - Angled cyan gradient header using CSS clip-path for modern look
+  - Clean white background with subtle gradient
+  - Sharp, angular design elements instead of rounded shapes
 - Enhanced responsive design with comprehensive breakpoints for all devices:
   - Desktop and laptops (>1200px)
   - Tablets (768px - 1200px)
   - Standard mobile phones (480px - 768px)
   - Small phones (360px - 480px)
-  - Very small screens (<360px) with optimized spacing and text wrapping
+  - Very small screens (<360px) with optimized spacing
 - Full keyboard accessibility:
   - Visible focus indicators on all interactive elements (3px solid outlines with offsets)
-  - No focus state clipping (overflow: visible on containers)
-  - Proper focus-within styles for input fields
+  - Proper focus styles for inputs, buttons, selects, and checkboxes
   - All focus states meet WCAG 2.4.7 requirements
 - Optimized for old Android devices and legacy browsers:
   - Minimum 16px font size on inputs to prevent auto-zoom on iOS
   - Touch-friendly buttons (48px minimum tap target)
-  - Hardware-accelerated transitions using CSS transforms
-  - Fallback support for browsers without backdrop-filter
-  - Reduced shadows and simplified effects for better performance
+  - Simple, performant transitions
+  - Fallback support for older browsers
 - Modern visual features:
-  - Pill-shaped buttons with accessible gradient backgrounds
-  - Floating labels inside input fields
-  - Glassmorphism effects with clean white cards
-  - Modern shadow system (subtle, soft, medium, dramatic)
-  - Smooth cubic-bezier transitions
-  - Centered, spacious layout with generous padding
+  - Bold rectangular buttons with dark blue gradients (not pill-shaped)
+  - Clean bordered input fields with uppercase labels
+  - Flat, modern design with simple box shadows
+  - Blue gradient logo background
+  - Geometric header section with angled design
+  - Clean white cards with sharp borders
 - Accessibility features:
   - WCAG AA compliant color contrast throughout
   - Reduced motion support for users with vestibular disorders
   - Proper semantic HTML structure
   - Keyboard navigation support
   - Webkit/iOS specific optimizations
-- Updated settings.json with accessible color palette
-- Maintained all existing functionality while completely modernizing visual presentation
+- Updated settings.json with cyan/blue color palette
+- Maintained all existing functionality while implementing completely new visual design
 
 # User Preferences
 
