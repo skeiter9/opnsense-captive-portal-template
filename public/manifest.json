@@ -1,0 +1,23 @@
+{
+  "name": "Burbase Invitados - Network Portal",
+  "short_name": "Burbase Portal",
+  "description": "Guest WiFi Network Access Portal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#145214",
+  "theme_color": "#145214",
+  "icons": [
+    {
+      "src": "/images/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

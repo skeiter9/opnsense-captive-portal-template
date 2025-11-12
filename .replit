@@ -3,6 +3,7 @@ run = "yarn start"
 
 [nix]
 channel = "stable-24_05"
+packages = ["imagemagick"]
 
 [deployment]
 run = ["sh", "-c", "yarn start"]
