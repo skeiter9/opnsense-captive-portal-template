@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LanguageSwitcher } from '../components/layout/LanguageSwitcher';
 import { Logo } from '../components/layout/Logo';
 import { AccessCodeForm } from '../components/auth/AccessCodeForm';
@@ -6,13 +6,35 @@ import { ErrorModal } from '../components/modals/ErrorModal';
 import { TermsModal } from '../components/modals/TermsModal';
 import { useAuth } from '../hooks/useAuth';
 import { useLanguage } from '../contexts/LanguageContext';
+import { captivePortalApi } from '../services/captivePortalApi';
 
 export function LoginPage() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [clientInfo, setClientInfo] = useState({ ipAddress: '...', macAddress: '...' });
   const { authenticate, loading, errorType, authType } = useAuth();
   const { t } = useLanguage();
+
+  useEffect(() => {
+    fetchClientInfo();
+  }, []);
+
+  const fetchClientInfo = async () => {
+    try {
+      const data = await captivePortalApi.status();
+      setClientInfo({
+        ipAddress: data.ipAddress || '127.0.0.1',
+        macAddress: data.macAddress || '00:11:22:33:44:55'
+      });
+    } catch (error) {
+      console.log('Could not fetch client info, using defaults');
+      setClientInfo({
+        ipAddress: '127.0.0.1',
+        macAddress: '00:11:22:33:44:55'
+      });
+    }
+  };
 
   const handleCodeSubmit = async (code) => {
     const username = code.substring(0, 2);
@@ -80,8 +102,8 @@ export function LoginPage() {
               {t('cp_portal_ifconfig_event_normal', 'Network interface configuration')}
             </h3>
             <div className="space-y-1 text-gray-600">
-              <p><span className="font-medium text-sm">{t('cp_portal_ifconfig_ip_address', 'IP')}:</span> <span className="text-sm">127.0.0.1</span></p>
-              <p><span className="font-medium text-sm">{t('cp_portal_ifconfig_mac_address', 'MAC')}:</span> <span className="text-sm">00:11:22:33:44:55</span></p>
+              <p><span className="font-medium text-sm">{t('cp_portal_ifconfig_ip_address', 'IP')}:</span> <span className="text-sm">{clientInfo.ipAddress}</span></p>
+              <p><span className="font-medium text-sm">{t('cp_portal_ifconfig_mac_address', 'MAC')}:</span> <span className="text-sm">{clientInfo.macAddress}</span></p>
             </div>
           </div>
 
