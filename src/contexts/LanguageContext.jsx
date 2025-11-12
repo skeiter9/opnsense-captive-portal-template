@@ -10,8 +10,6 @@ export function LanguageProvider({ children }) {
   const [availableLanguages] = useState([
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' },
-    { code: 'pl', name: 'Polski' },
-    { code: 'sk', name: 'Slovenčina' },
   ]);
 
   useEffect(() => {
@@ -24,14 +22,22 @@ export function LanguageProvider({ children }) {
 
   const loadLanguage = async (langCode) => {
     try {
-      const response = await fetch(`/locales/${langCode}.json`);
+      // Only load if we have the translation file
+      const validLangs = ['en', 'es'];
+      const targetLang = validLangs.includes(langCode) ? langCode : 'en';
+      
+      const response = await fetch(`/locales/${targetLang}.json`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
       const data = await response.json();
       setTranslations(data);
-      setCurrentLang(langCode);
-      localStorage.setItem('selectedLanguage', langCode);
+      setCurrentLang(targetLang);
+      localStorage.setItem('selectedLanguage', targetLang);
       
-      document.documentElement.lang = langCode;
-      document.documentElement.dir = RTL_LANGUAGES.includes(langCode) ? 'rtl' : 'ltr';
+      document.documentElement.lang = targetLang;
+      document.documentElement.dir = RTL_LANGUAGES.includes(targetLang) ? 'rtl' : 'ltr';
+      
+      console.log(`Language switched to: ${targetLang}`);
     } catch (error) {
       console.error(`Failed to load language: ${langCode}`, error);
       if (langCode !== 'en') {
