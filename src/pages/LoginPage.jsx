@@ -31,7 +31,6 @@ export function LoginPage() {
         macAddress: data.macAddress || "00:11:22:33:44:55",
       });
     } catch (error) {
-      console.log("Could not fetch client info, using defaults");
       setClientInfo({
         ipAddress: "127.0.0.1",
         macAddress: "00:11:22:33:44:55",

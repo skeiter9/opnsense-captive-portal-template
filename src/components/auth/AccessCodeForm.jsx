@@ -13,25 +13,22 @@ export function AccessCodeForm({ onSubmit, loading, termsAccepted }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label htmlFor="accessCode" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="accessCode" className="block text-sm font-semibold text-gray-700 mb-3">
           {t('code', 'Access Code')}
         </label>
         <input
           id="accessCode"
           type="text"
           value={code}
-          onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 5))}
+          onChange={(e) => setCode(e.target.value.slice(0, 5))}
           placeholder={t('code_placeholder', 'Enter 5-digit code')}
-          className="input-field"
+          className="w-full px-5 py-4 text-lg font-semibold text-center tracking-widest rounded-xl border-2 border-gray-300 focus:border-forest focus:ring-4 focus:ring-forest/20 outline-none transition-all duration-200 bg-white text-gray-900 placeholder:text-gray-400 placeholder:font-normal placeholder:tracking-normal"
           maxLength={5}
           required
           autoComplete="off"
         />
-        <p className="text-xs text-gray-500 mt-1">
-          5-character code (e.g., HR001)
-        </p>
       </div>
 
       <button

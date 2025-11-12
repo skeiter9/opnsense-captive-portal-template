@@ -5,7 +5,7 @@ const LanguageContext = createContext();
 const RTL_LANGUAGES = ['ar', 'he', 'fa'];
 
 export function LanguageProvider({ children }) {
-  const [currentLang, setCurrentLang] = useState('en');
+  const [currentLang, setCurrentLang] = useState('es');
   const [translations, setTranslations] = useState({});
   const [availableLanguages] = useState([
     { code: 'en', name: 'English' },
@@ -37,9 +37,7 @@ export function LanguageProvider({ children }) {
       document.documentElement.lang = targetLang;
       document.documentElement.dir = RTL_LANGUAGES.includes(targetLang) ? 'rtl' : 'ltr';
       
-      console.log(`Language switched to: ${targetLang}`);
     } catch (error) {
-      console.error(`Failed to load language: ${langCode}`, error);
       if (langCode !== 'en') {
         loadLanguage('en');
       }

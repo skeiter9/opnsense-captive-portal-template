@@ -19,7 +19,6 @@ if (existsSync(opnsenseDir)) {
 mkdirSync(opnsenseDir, { recursive: true });
 mkdirSync(join(opnsenseDir, 'assets'), { recursive: true });
 mkdirSync(join(opnsenseDir, 'images'), { recursive: true });
-mkdirSync(join(opnsenseDir, 'fonts'), { recursive: true });
 mkdirSync(join(opnsenseDir, 'locales'), { recursive: true });
 
 console.log('✅ Created directory structure');
@@ -30,6 +29,13 @@ copyFileSync(join(distDir, 'index.html'), join(opnsenseDir, 'index.html'));
 copyFileSync(join(distDir, 'success.html'), join(opnsenseDir, 'success.html'));
 console.log('  ✓ index.html');
 console.log('  ✓ success.html');
+
+// Copy Favicons and other root files
+console.log('\n📄 Copying Favicon and other root files...');
+['favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png', 'manifest.json'].forEach(file => {
+  copyFileSync(join(distDir, file), join(opnsenseDir, file));
+  console.log(`  ✓ ${file}`);
+});
 
 // Copy assets (JS/CSS)
 console.log('\n📦 Copying assets...');
@@ -65,9 +71,7 @@ const copyDirRecursive = (src, dest) => {
 };
 
 copyDirRecursive(join(rootDir, 'public', 'images'), join(opnsenseDir, 'images'));
-copyDirRecursive(join(rootDir, 'public', 'fonts'), join(opnsenseDir, 'fonts'));
 console.log('  ✓ images/');
-console.log('  ✓ fonts/');
 
 // Copy locales
 console.log('\n🌐 Copying language files...');
@@ -79,11 +83,6 @@ if (existsSync(localesDir)) {
     console.log(`  ✓ locales/${file}`);
   });
 }
-
-// Copy settings.json
-console.log('\n⚙️  Copying configuration...');
-copyFileSync(join(rootDir, 'public', 'settings.json'), join(opnsenseDir, 'settings.json'));
-console.log('  ✓ settings.json');
 
 console.log('\n✨ OPNsense deployment package ready!');
 console.log(`📂 Output directory: ${opnsenseDir}`);
