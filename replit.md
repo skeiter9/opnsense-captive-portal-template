@@ -8,6 +8,13 @@ The project is primarily a frontend application that integrates with OPNsense's 
 
 # Recent Changes
 
+**November 12, 2025 - Fixed Language Switcher Visibility**
+- Fixed dropdown menu text visibility issue where language names were invisible until hover
+- Changed dropdown link color from dark green to white (#ffffff) for always-visible text
+- Removed problematic hover-only text display that was unusable on mobile devices
+- Language options now clearly visible when dropdown menu is opened
+- Improved mobile usability with no hover requirement
+
 **November 12, 2025 - Distinct Visual Styling for Expired vs Invalid Codes**
 - Implemented different modal appearance for expired access codes:
   - **Expired codes**: Orange header (#f59e0b) with clock icon (⏰)
