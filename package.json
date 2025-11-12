@@ -1,14 +1,32 @@
-
 {
   "name": "opnsense-captive-portal-template",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Multilanguage Captive Portal Template for OPNsense",
   "main": "server.js",
+  "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "vite",
+    "build": "vite build",
+    "build:opnsense": "npm run build && node scripts/prepare-opnsense.js",
+    "preview": "vite preview",
+    "server": "node server.js"
   },
-  "keywords": ["captive-portal", "opnsense", "multilanguage"],
+  "keywords": [
+    "captive-portal",
+    "opnsense",
+    "multilanguage"
+  ],
   "author": "Mirosław Majka",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.0",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
+    "vite": "^7.2.2"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
 }
