@@ -88,6 +88,24 @@ function handleCaptivePortalAPI(req, res, pathname) {
         return;
     }
     
+    // Handle GET requests for status endpoint
+    if (req.method === 'GET' && pathname.includes('/status')) {
+        const clientIP = req.socket.remoteAddress || '192.168.1.100';
+        const session = sessions.get(clientIP);
+        
+        const mockResponse = session || {
+            clientState: 'UNAUTHORIZED',
+            authType: 'normal',
+            ipAddress: clientIP,
+            macAddress: '00:11:22:33:44:55',
+            startTime: Math.floor(Date.now() / 1000)
+        };
+        
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(mockResponse));
+        return;
+    }
+    
     if (req.method === 'POST') {
         let body = '';
         req.on('data', chunk => {
