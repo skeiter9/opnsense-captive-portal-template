@@ -8,6 +8,15 @@ The project is primarily a frontend application that integrates with OPNsense's 
 
 # Recent Changes
 
+**November 12, 2025 - Improved Error Messages for Access Codes**
+- Fixed error handling to show specific messages for expired/invalid access codes
+- Access code errors now display:
+  - Specific reasons: invalid code, already used, expired, typos
+  - Specific solutions: verify code, check for previous use, request new code
+- Username/password errors continue to show account-specific troubleshooting
+- Added `currentAuthType` tracking to distinguish between authentication methods
+- Both English and Spanish error messages fully differentiated
+
 **November 11, 2025 - OPNsense API Enhancements & Session Management**
 - Added Modern Portal API (RFC 8908) endpoint for iOS/Android captive portal detection
   - Implements standardized `/api/captiveportal/access/modernapi/` endpoint

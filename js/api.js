@@ -20,6 +20,7 @@ class CaptivePortalAPI {
         this.sessionData = null;
         this.sessionTimeoutInterval = null;
         this.zoneId = '0';
+        this.currentAuthType = null;
         
         this.init();
     }
@@ -495,13 +496,14 @@ class CaptivePortalAPI {
                     data.loginTime.setTime(data.loginTime.getTime() + this.settings.login.delay * 60000);
                     document.cookie = "loginTime=" + data.loginTime + ";expires=" + data.loginTime + ";path=/";
                     this.authorisationFailed({
+                        authType: this.currentAuthType,
                         onClose: () => this.connectionBlocked(data.loginTime)
                     });
                     this.setAttempt(data);
                 }
             }
 
-            this.authorisationFailed();
+            this.authorisationFailed({ authType: this.currentAuthType });
         }
     }
 
@@ -849,7 +851,7 @@ class CaptivePortalAPI {
         
         const code = document.getElementById('inputCode').value;
         if (!code || code.length !== 5) {
-            this.authorisationFailed();
+            this.authorisationFailed({ authType: 'code' });
             return;
         }
         
@@ -857,6 +859,7 @@ class CaptivePortalAPI {
         const username = code.substring(0, 2);
         const password = code.substring(2, 5);
         
+        this.currentAuthType = 'code';
         this.authenticateUser({
             user: username,
             password: password,
@@ -865,6 +868,7 @@ class CaptivePortalAPI {
 
     handleAnonymousSignIn(event) {
         event.preventDefault();
+        this.currentAuthType = 'anonymous';
         this.authenticateUser({ user: '', password: '' });
     }
 
@@ -905,6 +909,8 @@ class CaptivePortalAPI {
             this.connectionLogon(data);
         } catch (error) {
             this.connectionFailed();
+        } finally {
+            this.currentAuthType = null;
         }
     }
 
