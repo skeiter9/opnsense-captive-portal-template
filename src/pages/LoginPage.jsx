@@ -41,11 +41,11 @@ export function LoginPage() {
           <Logo />
           
           <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
-            {t('cp_wellcome_title', 'User login system')}
+            {t('cp_portal_head_title', 'User login system')}
           </h1>
           
           <p className="text-center text-gray-600 mb-6">
-            {t('cp_wellcome_info_title', 'Welcome to the network')}
+            {t('cp_portal_info', 'Welcome to the network')}
           </p>
 
           <AccessCodeForm
@@ -63,36 +63,36 @@ export function LoginPage() {
                 className="mt-1 w-4 h-4 text-forest border-gray-300 rounded focus:ring-forest"
               />
               <span className="text-sm text-gray-700">
-                {t('cp_text_accept', 'I accept')}{' '}
+                {t('termcondition1', 'I accept')}{' '}
                 <button
                   onClick={() => setShowTerms(true)}
                   className="text-forest hover:underline font-medium"
                 >
-                  {t('cp_link_rules', 'terms')}
+                  {t('rules', 'terms')}
                 </button>
-                {' '}{t('cp_text_provision', 'of the provision of internet access services.')}
+                {' '}{t('termcondition2', 'of the provision of internet access services.')}
               </span>
             </label>
           </div>
 
           <div className="mt-6 pt-6 border-t border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-2">
-              {t('cp_network_interface', 'Network interface configuration')}
+              {t('cp_portal_ifconfig_event_normal', 'Network interface configuration')}
             </h3>
-            <div className="space-y-1 text-sm text-gray-600">
-              <p><span className="font-medium">IP:</span> 127.0.0.1</p>
-              <p><span className="font-medium">MAC:</span> 00:11:22:33:44:55</p>
+            <div className="space-y-1 text-gray-600">
+              <p><span className="font-medium text-sm">{t('cp_portal_ifconfig_ip_address', 'IP')}:</span> <span className="text-sm">127.0.0.1</span></p>
+              <p><span className="font-medium text-sm">{t('cp_portal_ifconfig_mac_address', 'MAC')}:</span> <span className="text-sm">00:11:22:33:44:55</span></p>
             </div>
           </div>
 
           <div className="mt-6 text-center text-xs text-gray-500">
-            <p>{t('cp_footer_info', 'Burbase Invitados - Internet Service Provider')}</p>
-            <p className="mt-1">{t('cp_footer_address', 'Street 10, City & Post Code etc.')}</p>
+            <p>{t('isp_info.isp_name', 'Burbase Invitados - Internet Service Provider')}</p>
+            <p className="mt-1">{t('isp_info.isp_address', 'Street 10, City & Post Code etc.')}</p>
           </div>
         </div>
 
         <div className="mt-4 text-center text-sm text-white/80">
-          <p>{t('cp_cookie_notice', 'This site uses cookies to store information on your computer.')}</p>
+          <p>{t('cp_portal_cookies_note', 'This site uses cookies to store information on your computer.')}</p>
         </div>
       </div>
 

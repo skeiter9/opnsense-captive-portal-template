@@ -47,6 +47,16 @@ export function LanguageProvider({ children }) {
   };
 
   const t = (key, fallback = '') => {
+    // Support nested keys like 'isp_info.isp_name'
+    if (key.includes('.')) {
+      const keys = key.split('.');
+      let value = translations;
+      for (const k of keys) {
+        value = value?.[k];
+        if (value === undefined) break;
+      }
+      return value || fallback || key;
+    }
     return translations[key] || fallback || key;
   };
 
