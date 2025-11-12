@@ -69,6 +69,7 @@
     "modal": {
         "timeout": 5000,
         "auth_failed_header_color": "#dc3545",
+        "code_expired_header_color": "#f59e0b",
         "conn_failed_header_color": "#dc3545",
         "show_rules_header_color": "#4ca1af",
         "overlay_color": "rgba(0,0,0,0.5)"

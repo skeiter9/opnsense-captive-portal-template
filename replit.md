@@ -8,6 +8,18 @@ The project is primarily a frontend application that integrates with OPNsense's 
 
 # Recent Changes
 
+**November 12, 2025 - Distinct Visual Styling for Expired vs Invalid Codes**
+- Implemented different modal appearance for expired access codes:
+  - **Expired codes**: Orange header (#f59e0b) with clock icon (⏰)
+  - **Invalid codes**: Red header (#dc3545) with warning icon (⚠️)
+- Added dedicated expired code messages in English and Spanish:
+  - Expired-specific title: "Access Code Expired" / "Código de Acceso Expirado"
+  - Focused messaging on voucher validity period expiration
+  - Solutions emphasize requesting new code vs checking for typos
+- Created test expired code `EXP01` in development server
+- Added `currentErrorType` tracking to distinguish expired vs invalid errors
+- Both visual styling and messaging fully differentiated between error types
+
 **November 12, 2025 - Improved Error Messages for Access Codes**
 - Fixed error handling to show specific messages for expired/invalid access codes
 - Access code errors now display:

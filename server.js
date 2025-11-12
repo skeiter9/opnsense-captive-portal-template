@@ -131,8 +131,15 @@ function handleCaptivePortalAPI(req, res, pathname) {
                 // "DY001" = username "DY" + password "001" = 1 day ticket  
                 // "WK001" = username "WK" + password "001" = 1 week ticket
                 // "MO001" = username "MO" + password "001" = 1 month ticket
+                // "EXP01" = username "EX" + password "P01" = EXPIRED CODE (for testing)
                 let sessionTimeout = 0;
                 let isValid = false;
+                let isExpired = false;
+                
+                // Check for expired code (for testing expired error UI)
+                if (user === 'EX' && password === 'P01') {
+                    isExpired = true;
+                }
                 
                 // Check username/password combinations (OPNsense standard)
                 if (user === 'HR' && password === '001') {
@@ -164,6 +171,16 @@ function handleCaptivePortalAPI(req, res, pathname) {
                     
                     // Store session for modern portal API
                     sessions.set(clientIP, mockResponse);
+                } else if (isExpired) {
+                    mockResponse = {
+                        clientState: 'UNAUTHORIZED',
+                        authType: 'normal',
+                        ipAddress: clientIP,
+                        macAddress: '00:11:22:33:44:55',
+                        error: 'Expired code',
+                        errorType: 'expired',
+                        errorDetail: 'The access code you entered has expired and is no longer valid.'
+                    };
                 } else {
                     mockResponse = {
                         clientState: 'UNAUTHORIZED',

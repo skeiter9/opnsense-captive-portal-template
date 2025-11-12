@@ -21,6 +21,7 @@ class CaptivePortalAPI {
         this.sessionTimeoutInterval = null;
         this.zoneId = '0';
         this.currentAuthType = null;
+        this.currentErrorType = null;
         
         this.init();
     }
@@ -373,22 +374,36 @@ class CaptivePortalAPI {
 
     authorisationFailed(options = {}) {
         const authType = options.authType || this.sessionData?.authType || 'normal';
+        const errorType = options.errorType || 'invalid';
         
         let errorInfo = this.langText.cp_error_info;
         let errorSolution = this.langText.cp_error_solution;
+        let title = this.langText.cp_error_login_err;
+        let subtitle = this.langText.cp_error_info_title;
+        let iconText = '&#9888;';
+        let headerColor = this.settings.modal?.auth_failed_header_color;
         
         if (authType === 'voucher' || authType === 'code') {
-            errorInfo = this.langText.cp_error_code_info || this.langText.cp_error_info;
-            errorSolution = this.langText.cp_error_code_solution || this.langText.cp_error_solution;
+            if (errorType === 'expired') {
+                title = this.langText.cp_error_code_expired_title || this.langText.cp_error_login_err;
+                subtitle = this.langText.cp_error_code_expired_subtitle || this.langText.cp_error_info_title;
+                errorInfo = this.langText.cp_error_code_expired_info || this.langText.cp_error_code_info || this.langText.cp_error_info;
+                errorSolution = this.langText.cp_error_code_expired_solution || this.langText.cp_error_code_solution || this.langText.cp_error_solution;
+                iconText = '&#x23F0;';
+                headerColor = this.settings.modal?.code_expired_header_color || this.settings.modal?.auth_failed_header_color;
+            } else {
+                errorInfo = this.langText.cp_error_code_info || this.langText.cp_error_info;
+                errorSolution = this.langText.cp_error_code_solution || this.langText.cp_error_solution;
+            }
         }
         
         const modal = {
-            title: this.langText.cp_error_login_err,
-            subtitle: this.langText.cp_error_info_title,
-            content: errorInfo + this.langText.cp_error_solution_title + errorSolution,
-            iconText: '&#9888;',
+            title: title,
+            subtitle: subtitle,
+            content: errorInfo + errorSolution,
+            iconText: iconText,
             customStyles: {
-                headerColor: this.settings.modal?.auth_failed_header_color,
+                headerColor: headerColor,
                 overlayColor: this.settings.modal?.overlay_color,
                 timeout: this.settings.modal?.timeout,
                 timeoutProgressbar: true,
@@ -497,13 +512,20 @@ class CaptivePortalAPI {
                     document.cookie = "loginTime=" + data.loginTime + ";expires=" + data.loginTime + ";path=/";
                     this.authorisationFailed({
                         authType: this.currentAuthType,
+                        errorType: this.currentErrorType || 'invalid',
                         onClose: () => this.connectionBlocked(data.loginTime)
                     });
                     this.setAttempt(data);
                 }
             }
 
-            this.authorisationFailed({ authType: this.currentAuthType });
+            this.authorisationFailed({ 
+                authType: this.currentAuthType,
+                errorType: this.currentErrorType || 'invalid'
+            });
+            
+            this.currentAuthType = null;
+            this.currentErrorType = null;
         }
     }
 
@@ -851,7 +873,7 @@ class CaptivePortalAPI {
         
         const code = document.getElementById('inputCode').value;
         if (!code || code.length !== 5) {
-            this.authorisationFailed({ authType: 'code' });
+            this.authorisationFailed({ authType: 'code', errorType: 'invalid' });
             return;
         }
         
@@ -860,6 +882,7 @@ class CaptivePortalAPI {
         const password = code.substring(2, 5);
         
         this.currentAuthType = 'code';
+        this.currentErrorType = 'invalid';
         this.authenticateUser({
             user: username,
             password: password,
@@ -905,12 +928,20 @@ class CaptivePortalAPI {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             
             const data = await response.json();
+            
+            if (data.errorType) {
+                this.currentErrorType = data.errorType;
+            } else if (data.clientState === 'UNAUTHORIZED') {
+                this.currentErrorType = 'invalid';
+            }
+            
             await this.clientInfo(data);
             this.connectionLogon(data);
         } catch (error) {
             this.connectionFailed();
         } finally {
             this.currentAuthType = null;
+            this.currentErrorType = null;
         }
     }
 
