@@ -5,11 +5,11 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node server.cjs & vite",
     "build": "vite build",
     "build:opnsense": "npm run build && node scripts/prepare-opnsense.js",
     "preview": "vite preview",
-    "server": "node server.js"
+    "server": "node server.cjs"
   },
   "keywords": [
     "captive-portal",
