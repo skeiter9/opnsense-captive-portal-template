@@ -87,7 +87,7 @@
         display: block;
         position: relative;
         background-color: var(--lang_switcher_link, transparent);
-        overflow: hidden;
+        overflow: visible;
         padding: 15px 45px 11px 13px;
         text-decoration: none;
         white-space: nowrap;
@@ -100,14 +100,14 @@
         font-weight: 500;
         line-height: 14px;
         &:hover {
-            color: #000;
+            color: var(--color_secondary);
         }
         &.current {
             &:link,
             &:visited,
             &:active {
                 background-color: var(--lang_switcher, transparent);
-                overflow: hidden;
+                overflow: visible;
                 text-decoration: none;
                 white-space: nowrap;
                 -webkit-transition: 0.25s;
